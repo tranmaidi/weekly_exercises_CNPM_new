@@ -1,8 +1,8 @@
 import express from "express"; //nap express
 import bodyParser from "body-parser"; //nap body-parser lay tham so tu client /user?id=7
-import viewEngine from "../config/viewEngine"; //nap viewEngine
-import initWebRoutes from './route/web'; //nap file web từ Route
-import connectDB from './config/configdb';
+import viewEngine from './config/viewEngine.js'; //nap viewEngine
+import initWebRoutes from './route/web.js'; //nap file web từ Route
+import connectDB from './config/configdb.js';
 require('dotenv').config(); //goi hàm config của dotenv để chạy lệnh process.env.PORT
 
 let app = express();

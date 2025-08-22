@@ -3,7 +3,6 @@ import CRUDService from '../services/CRUDService'; // import service
 
 // Hàm getHomePage
 let getHomePage = async (req, res) => {
-    // return res.send('Nguyễn Hữu Trung');
     try {
         let data = await db.User.findAll(); // lấy dữ liệu từ models/index
         console.log('......');
@@ -60,7 +59,7 @@ let getEditCRUD = async (req, res) => {
         // console.log('---');
         // console.log(userData);
         // console.log('---');
-        return res.render('users/editUser.ejs', {
+        return res.render('users/updateUser.ejs', {
             data: userData
         });
     } else {
