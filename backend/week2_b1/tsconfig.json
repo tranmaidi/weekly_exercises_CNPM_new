@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es2019",              // code JS output tương thích Node 12+
+    "module": "commonjs",            // module system của Node.js
+    "rootDir": "src",                // thư mục chứa code gốc
+    "outDir": "dist",                // thư mục sau khi build
+    "strict": true,                  // bật strict mode
+    "esModuleInterop": true,         // hỗ trợ import/export
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,            // bỏ qua check type của thư viện
+    "moduleResolution": "node"       // resolve module theo kiểu Node
+  },
+  "include": ["src"],                // chỉ build folder src
+  "exclude": ["node_modules"]        // bỏ qua node_modules
+}
