@@ -1,6 +1,6 @@
 const path = require("path");
 
-require("ts-node/register"); // 👈 thêm dòng này để Sequelize CLI hiểu file TS
+require("ts-node/register"); 
 
 module.exports = {
   config: path.resolve("src/config", "config.json"),
