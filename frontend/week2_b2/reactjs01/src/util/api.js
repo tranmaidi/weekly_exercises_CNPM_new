@@ -22,6 +22,18 @@ const getUserApi = () => {
     return axios.get(URL_API)
 }
 
+const getProductsApi = (page = 1, limit = 10, categoryId = null) => {
+  let URL_API = "/v1/api/products?page=${page}&limit=${limit}";
+  if (categoryId) URL_API += `&categoryId=${categoryId}`;
+
+  return axios.get(URL_API).then((res) => ({
+    products: res?.products || [],
+    currentPage: res?.currentPage || page,
+    totalPages: res?.totalPages || 1,
+    hasMore: res?.hasMore ?? false,
+  }));
+};
+
 export {
-    createUserApi, loginApi, getUserApi
+    createUserApi, loginApi, getUserApi, getProductsApi
 }
