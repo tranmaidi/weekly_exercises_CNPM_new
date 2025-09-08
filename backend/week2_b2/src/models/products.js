@@ -9,5 +9,19 @@ const productSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+productSchema.post("save", async function (doc) {
+  const esClient = require("../config/elasticsearch");
+  await esClient.index({
+    index: "products",
+    id: doc._id.toString(),
+    document: {
+      name: doc.name,
+      price: doc.price,
+      images: doc.images,
+      categoryId: doc.categoryId?.toString(),
+      createdAt: doc.createdAt,
+    },
+  });
+});
 
 module.exports = mongoose.model("Product", productSchema);
