@@ -6,7 +6,7 @@ const Fuse = require("fuse.js");
 // GET /api/products?categoryId=xxx&page=1&limit=10
 router.get("/", async (req, res) => {
   try {
-    const { categoryId, page = 1, limit = 10 } = req.query;
+    const { categoryId, page = 1, limit = 3 } = req.query;
 
     const query = categoryId ? { categoryId } : {};
 
@@ -42,7 +42,7 @@ router.get("/search", async (req, res) => {
       minPrice,
       maxPrice,
       page = 1,
-      limit = 10,
+      limit = 3,
     } = req.query;
 
     // Lấy toàn bộ dữ liệu MongoDB (nếu nhiều dữ liệu thì có thể cache sẵn)

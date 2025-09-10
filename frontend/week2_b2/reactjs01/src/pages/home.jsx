@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getProductsApi, searchProductsApi } from "../util/api";
 import "../styles/home.css";
 
@@ -15,11 +15,14 @@ const Home = () => {
   const [maxPrice, setMaxPrice] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
+  // ✅ dùng useRef để tránh gọi 2 lần khi StrictMode bật
+  const didFetch = useRef(false);
+
   const fetchProducts = async () => {
     if (!hasMore || loading || isSearching) return;
     setLoading(true);
     try {
-      const res = await getProductsApi(page, 6);
+      const res = await getProductsApi(page, 3);
       if (res?.products) {
         setProducts((prev) => [...prev, ...res.products]);
         setHasMore(res.hasMore);
@@ -63,7 +66,10 @@ const Home = () => {
 
   // load lần đầu
   useEffect(() => {
-    fetchProducts();
+    if (!didFetch.current) {
+      fetchProducts();
+      didFetch.current = true; // ✅ chỉ cho chạy 1 lần
+    }
   }, []);
 
   // lazy load scroll
@@ -72,7 +78,7 @@ const Home = () => {
     const handleScroll = () => {
       if (
         window.innerHeight + document.documentElement.scrollTop + 1 >=
-          document.documentElement.scrollHeight &&
+        document.documentElement.scrollHeight &&
         hasMore &&
         !loading
       ) {
@@ -91,35 +97,34 @@ const Home = () => {
       <form onSubmit={handleSearch} className="filter-bar">
         <input
           type="text"
-          placeholder="Tìm sản phẩm..."
+          placeholder="🔍 Tìm sản phẩm..."
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
         />
 
         <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-          <option value="">Tất cả danh mục</option>
-          <option value="id_danh_muc_1">Áo</option>
-          <option value="id_danh_muc_2">Quần</option>
-          <option value="id_danh_muc_3">Giày</option>
-          {/* TODO: load category từ API thay vì fix cứng */}
+          <option value="">📂 Tất cả danh mục</option>
+          <option value="68be3ca4822c58f3becde046">👕 Áo</option>
+          <option value="68be3cc5822c58f3becde048">👟 Giày</option>
         </select>
 
         <input
           type="number"
-          placeholder="Giá tối thiểu"
+          placeholder="⬇️ Giá tối thiểu"
           value={minPrice}
           onChange={(e) => setMinPrice(e.target.value)}
         />
 
         <input
           type="number"
-          placeholder="Giá tối đa"
+          placeholder="⬆️ Giá tối đa"
           value={maxPrice}
           onChange={(e) => setMaxPrice(e.target.value)}
         />
 
-        <button type="submit">Lọc</button>
+        <button type="submit">Lọc 🔎</button>
       </form>
+
 
       {products.length === 0 && !loading && <p>Không có sản phẩm nào.</p>}
 
@@ -134,9 +139,7 @@ const Home = () => {
             <div className="product-info">
               <h3 className="product-name">{p.name}</h3>
               <p className="product-price">
-                {p.price
-                  ? `${p.price.toLocaleString("vi-VN")}₫`
-                  : "Liên hệ"}
+                {p.price ? `${p.price.toLocaleString("vi-VN")}₫` : "Liên hệ"}
               </p>
               <div className="product-actions">
                 <button className="btn">🛒</button>
