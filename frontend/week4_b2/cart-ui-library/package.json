@@ -1,0 +1,36 @@
+{
+  "name": "tmd-cart-ui-library",
+  "version": "1.0.1",
+  "description": "UI Library for Cart with React components",
+  "main": "dist/cart-ui-library.umd.js",
+  "module": "dist/cart-ui-library.es.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "react",
+    "cart",
+    "ui",
+    "library",
+    "components"
+  ],
+  "author": "Tên của bạn",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.1",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.2",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.5"
+  }
+}
