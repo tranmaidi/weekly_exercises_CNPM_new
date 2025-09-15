@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { getProductsApi, searchProductsApi } from "../util/api";
+import { getProductsApi, searchProductsApi, searchProductSByES } from "../util/api";
 import "../styles/home.css";
 
 const Home = () => {
@@ -18,16 +18,21 @@ const Home = () => {
   // ✅ dùng useRef để tránh gọi 2 lần khi StrictMode bật
   const didFetch = useRef(false);
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (pageParam = page) => {
     if (!hasMore || loading || isSearching) return;
     setLoading(true);
     try {
-      const res = await getProductsApi(page, 3);
-      if (res?.products) {
-        setProducts((prev) => [...prev, ...res.products]);
-        setHasMore(res.hasMore);
-        setPage((prev) => prev + 1);
-      }
+      const res = await getProductsApi(pageParam, 6);
+      console.log('ré: ', res)
+
+      const newProducts = res.data.products || [];
+      console.log("newProducts: ", newProducts)
+      setProducts((prev) =>
+        pageParam === 1 ? newProducts : [...prev, ...newProducts]
+      );
+
+      setHasMore(res.data.page < res.data.totalPages);
+      setPage(pageParam + 1);
     } catch (error) {
       console.error("Lỗi khi load sản phẩm:", error);
     } finally {
@@ -35,27 +40,28 @@ const Home = () => {
     }
   };
 
+
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!keyword.trim() && !categoryId && !minPrice && !maxPrice) {
-      // reset -> quay về lazy load
       setProducts([]);
       setPage(1);
       setHasMore(true);
       setIsSearching(false);
-      fetchProducts();
+      fetchProducts(1);
       return;
     }
     try {
       setLoading(true);
       setIsSearching(true);
-      const res = await searchProductsApi({
+      const res = await searchProductSByES({
         keyword,
         categoryId,
         minPrice,
         maxPrice,
       });
-      setProducts(res?.products || []);
+      console.log("res: ", res.products)
+      setProducts(res.products || []);
       setHasMore(false);
     } catch (err) {
       console.error("Lỗi khi search:", err);
@@ -63,6 +69,7 @@ const Home = () => {
       setLoading(false);
     }
   };
+  console.log("product: ", products)
 
   // load lần đầu
   useEffect(() => {

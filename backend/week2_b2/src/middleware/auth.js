@@ -2,9 +2,17 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 const auth = (req, res, next) => {
-    const white_lists = ["/", "/register", "/login"];
-    if (white_lists.find(item => '/v1/api' + item == req.originalUrl)) {
-        next();
+    const white_lists = [
+        "/v1/api/",
+        "/v1/api/register",
+        "/v1/api/login",
+        "/v1/api/elasticsearch/index/products",
+        "/v1/api/elasticsearch/search"
+    ];
+    const urlWithoutQuery = req.originalUrl.split("?")[0];
+    if (white_lists.includes(urlWithoutQuery)) {
+        console.log("✅ Bypass auth:", urlWithoutQuery);
+        return next();
     } else {
         if (req?.headers?.authorization?.split(' ')?.[1]) {
             const token = req.headers.authorization.split(' ')[1];
@@ -15,6 +23,7 @@ const auth = (req, res, next) => {
                 req.user = {
                     email: decoded.email,
                     name: decoded.name,
+                    role: decoded.role,
                     createdBy: "holdanit"
                 }
                 console.log(">>> check token: ", decoded)
